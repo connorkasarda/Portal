@@ -1,18 +1,18 @@
 #include <iostream>
-#include "Root.h"
+#include "StackAllocator.h"
+
 
 int main(int argc, char** argv)
 {
-	Portal::Root engine;
+	// Startup (priority queue to maintain order?)
 
-	engine.Startup();
+	// Run
 	while (true)
 	{
-		engine.Run();
-		// For demonstration purposes, break loop after one iteration
+		// Execute only once for testing purposes
 		break;
 	}
-	engine.Shutdown();
+	// Shutdown
 
 	return 0;
 }
