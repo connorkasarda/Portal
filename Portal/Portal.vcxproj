@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -11,13 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Allocator.h" />
+    <ClInclude Include="include\Memory\MemoryBistack.h" />
     <ClInclude Include="include\Debug.h" />
-    <ClInclude Include="include\StackAllocator.h" />
+    <ClInclude Include="include\Memory\MemoryPool.h" />
+    <ClInclude Include="include\Memory\MemoryStack.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Memory\MemoryBistack.cpp" />
     <ClCompile Include="src\Debug.cpp" />
-    <ClCompile Include="src\StackAllocator.cpp" />
+    <ClCompile Include="src\Memory\MemoryPool.cpp" />
+    <ClCompile Include="src\Memory\MemoryStack.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -63,7 +66,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG;_DEBUG;CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\Memory</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
