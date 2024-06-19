@@ -1,9 +1,7 @@
-#include <iostream>
-#include "StackAllocator.h"
-
-
 int main(int argc, char** argv)
 {
+	// Tests
+
 	// Startup (priority queue to maintain order?)
 
 	// Run
