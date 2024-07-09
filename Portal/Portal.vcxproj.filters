@@ -15,30 +15,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Debug.h">
+    <ClInclude Include="include\Memory\BistackAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Memory\MemoryBistack.h">
+    <ClInclude Include="include\Memory\PoolAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Memory\MemoryPool.h">
+    <ClInclude Include="include\Memory\StackAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Memory\MemoryStack.h">
+    <ClInclude Include="include\Debug\Assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Portal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\AllocatorUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Debug.cpp">
+    <ClCompile Include="src\Memory\BistackAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Memory\MemoryBistack.cpp">
+    <ClCompile Include="src\Memory\StackAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Memory\MemoryStack.cpp">
+    <ClCompile Include="src\Memory\PoolAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Memory\MemoryPool.cpp">
+    <ClCompile Include="src\Debug\Assert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

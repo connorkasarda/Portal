@@ -1,48 +1,53 @@
-#include "Debug.h"
-#include "MemoryStack.h"
+#include "Assert.h"
+#include "AllocatorUtility.h"
+#include "StackAllocator.h"
 
 namespace Portal
 {
-	MemoryStack::MemoryStack(std::size_t size)
+	StackAllocator::StackAllocator(std::size_t size)
 		: memory(nullptr)
 		, size(size)
 		, marker(0)
+		, chunkSizes()
 	{
 		memory = std::malloc(size);
-		ASSERT(memory != nullptr, "Failed to acquire memory for stack "\
-			"allocator when constructed");
+		ASSERT(memory != nullptr, "Failed to acquire memory for Stack "\
+			"Allocator when constructed");
 	}
 	// ------------------------------------------------------------------------
-	MemoryStack::~MemoryStack()
+	StackAllocator::~StackAllocator()
 	{
 		std::free(memory);
 	}
 	// ------------------------------------------------------------------------
-	void* MemoryStack::Allocate(std::size_t chunkSize)
+	void* StackAllocator::Allocate(std::size_t chunkSize,
+		std::size_t alignment)
 	{
-		if (marker + chunkSize > size)
+		std::size_t alignedMarker = AlignMemoryAddressForward(marker,
+			alignment);
+		if (alignedMarker + chunkSize > size)
 		{
-			ASSERT(false, "Stack Memory ran out of memory during "\
+			ASSERT(false, "Stack Allocator ran out of memory during "\
 				"allocation.");
 			return nullptr;
 		}
-		void* ptr = static_cast<char*>(memory) + marker;
-		marker += chunkSize;
+		void* ptr = static_cast<char*>(memory) + alignedMarker;
+		marker = alignedMarker + chunkSize;
 		chunkSizes.push(chunkSize);
 		return ptr;
 	}
 	// ------------------------------------------------------------------------
-	void MemoryStack::Deallocate(void* ptr)
+	void StackAllocator::Deallocate(void* ptr)
 	{
 		if (chunkSizes.empty())
 		{
-			ASSERT(false, "No allocated blocks during Stack Memory "\
+			ASSERT(false, "No allocated blocks during Stack Allocator "\
 				"deallocation call.");
 			return;
 		}
 		if (ptr != static_cast<char*>(memory) + marker - chunkSizes.top())
 		{
-			ASSERT(false, "Invalid pointer passed to Stack Memory "\
+			ASSERT(false, "Invalid pointer passed to Stack Allocator "\
 				"deallocation method. Incorrect position in stack.");
 			return;
 		}
@@ -50,7 +55,7 @@ namespace Portal
 		chunkSizes.pop();
 	}
 	// ------------------------------------------------------------------------
-	void MemoryStack::Reset()
+	void StackAllocator::Reset()
 	{
 		marker = 0;
 		while (!chunkSizes.empty()) chunkSizes.pop();
