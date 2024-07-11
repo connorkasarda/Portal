@@ -15,9 +15,12 @@ namespace Portal
 		// Destructor
 		~StackAllocator();
 		// Allocates a chunk in memory stack
-		void* Allocate(std::size_t chunkSize, std::size_t alignment);
+		// Template function implementations need to be defined in the header
+		template <typename T>
+		T* Allocate();
 		// Deallocates chunk in memory stack
-		void Deallocate(void* ptr);
+		template <typename T>
+		void Deallocate(T* chunkPtr);
 		// Reset allocator to original state
 		void Reset();
 	private:
@@ -30,6 +33,50 @@ namespace Portal
 		// Record of chunk sizes in stack order
 		std::stack<std::size_t> chunkSizes; 
 	}; // class StackAllocator
+
+	// Template Implementations
+	template <typename T>
+	T* StackAllocator::Allocate()
+	{
+		std::size_t chunkSize = sizeof(T);
+		std::size_t alignedMarker = AlignMemoryAddressForward(marker,
+			alignof(T));
+		if (alignedMarker + chunkSize > size)
+		{
+			ASSERT(false, "Stack Allocator ran out of memory during "\
+				"allocation.");
+			return nullptr;
+		}
+		void* chunkPtr = static_cast<char*>(memory) + alignedMarker;
+		marker = alignedMarker + chunkSize;
+		chunkSizes.push(chunkSize);
+		return static_cast<T*>(chunkPtr);
+	}
+	// ------------------------------------------------------------------------
+	template <typename T>
+	void StackAllocator::Deallocate(T* chunkPtr)
+	{
+		if (chunkSizes.empty())
+		{
+			ASSERT(false, "No allocated blocks during Stack Allocator "\
+				"deallocation call.");
+			return;
+		}
+		// This seems a little insane but is necessary ...
+		// 1. We static cast memory to char* to allow arithmetic
+		// 2. Now, we take arithmetic and create intermediate void*
+		// 3. Produce correct T* for if check
+		if (chunkPtr != static_cast<T*>(
+			static_cast<void*>(
+				static_cast<char*>(memory) + marker - chunkSizes.top())))
+		{
+			ASSERT(false, "Invalid pointer passed to Stack Allocator "\
+				"deallocation method. Incorrect position in stack.");
+			return;
+		}
+		marker -= chunkSizes.top();
+		chunkSizes.pop();
+	}
 } // namespace Portal
 
 #endif // STACK_ALLOCATOR_H
