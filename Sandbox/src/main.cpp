@@ -10,9 +10,9 @@ int main(int argc, char** argv)
 	// Testing
 	Portal::StackAllocator salloc(100);
 
-	int* intptr = static_cast<int*>(salloc.Allocate(sizeof(int), alignof(int)));
+	int* intptr = salloc.Allocate<int>();
 	*intptr = 42;
-	float* floatptr = static_cast<float*>(salloc.Allocate(sizeof(float), alignof(float)));
+	float* floatptr = salloc.Allocate<float>();
 	*floatptr = 3.14f;
 	salloc.Deallocate(floatptr);
 	salloc.Deallocate(intptr);
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 		std::string name{};
 		int health{};
 	};
-	Player* playerptr = static_cast<Player*>(salloc.Allocate(sizeof(Player), alignof(Player)));
+	Player* playerptr = salloc.Allocate<Player>();
 	new (playerptr) Player{"Seig", 100};
 	// Need to manually destruct when working with objects instantiated using 
 	// placement new syntax
@@ -31,18 +31,18 @@ int main(int argc, char** argv)
 
 	Portal::BistackAllocator balloc(128);
 
-	int* intptr1 = static_cast<int*>(balloc.AllocateBack(sizeof(int), alignof(int)));
+	int* intptr1 = balloc.AllocateBack<int>();
 	*intptr1 = 1;
-	int* intptr2 = static_cast<int*>(balloc.AllocateBack(sizeof(int), alignof(int)));
+	int* intptr2 = balloc.AllocateBack<int>();
 	*intptr2 = 2;
-	int* intptr3 = static_cast<int*>(balloc.AllocateBack(sizeof(int), alignof(int)));
+	int* intptr3 = balloc.AllocateBack<int>();
 	*intptr3 = 3;
 
-	double* doubleptr1 = static_cast<double*>(balloc.AllocateFront(sizeof(double), alignof(double)));
+	double* doubleptr1 = balloc.AllocateFront<double>();
 	*doubleptr1 = 4.5;
-	double* doubleptr2 = static_cast<double*>(balloc.AllocateFront(sizeof(double), alignof(double)));
+	double* doubleptr2  =balloc.AllocateFront<double>();
 	*doubleptr2 = 6.7;
-	double* doubleptr3 = static_cast<double*>(balloc.AllocateFront(sizeof(double), alignof(double)));
+	double* doubleptr3 = balloc.AllocateFront<double>();
 	*doubleptr3 = 8.9;
 
 	balloc.DeallocateFront(doubleptr3);
@@ -50,10 +50,10 @@ int main(int argc, char** argv)
 	balloc.DeallocateBack(intptr2);
 	balloc.DeallocateFront(doubleptr2);
 
-	int* intptr4 = static_cast<int*>(balloc.AllocateBack(sizeof(int), alignof(int)));
+	int* intptr4 = balloc.AllocateBack<int>();
 	*intptr4 = 10;
 
-	double* doubleptr4 = static_cast<double*>(balloc.AllocateFront(sizeof(double), alignof(double)));
+	double* doubleptr4 = balloc.AllocateFront<double>();
 	*doubleptr4 = 11.12;
 
 	balloc.Reset();
